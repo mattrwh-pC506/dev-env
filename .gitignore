@@ -1,0 +1,14 @@
+# Ignore everything
+*
+
+# But not these files...
+!.gitignore
+!customVim/**/*
+!.vimrc
+!.vim/
+!customVim/
+!.tmux.conf
+!*tmux/
+!install-env.sh
+# etc...
+#
