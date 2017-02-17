@@ -1,0 +1,244 @@
+source ~/customVim/init.vim
+source ~/customVim/vundle.vim
+source ~/customVim/git.vim
+source ~/customVim/html.vim
+source ~/customVim/javascript.vim
+source ~/customVim/json.vim
+source ~/customVim/python.vim
+source ~/customVim/typescript.vim
+source ~/customVim/scss.vim
+source ~/customVim/search.vim
+source ~/customVim/sort.vim
+source ~/customVim/tagbar.vim
+source ~/customVim/tmux.vim
+
+" Add Under-Cusor Highlighting
+:autocmd CursorMoved * exe printf('match IncSearch /\V\<%s\>/', escape(expand('<cword>'), '/\'))
+
+" Commenting tools
+Plugin 'scrooloose/nerdcommenter.git'
+
+" Lets you deal with braket pairs etc.
+Plugin 'tpope/vim-surround.git'
+
+" Adds indent objects
+Plugin 'michaeljsmith/vim-indent-object'
+
+" Autocomplete
+Plugin 'Valloric/YouCompleteMe'
+
+" Coffee script support
+Plugin 'kchmck/vim-coffee-script'
+
+" Node.js tools
+Plugin 'moll/vim-node'
+
+" scss syntax highlighting
+Plugin 'cakebaker/scss-syntax.vim'
+
+" extended matching with %
+Plugin 'edsono/vim-matchit.git'
+
+" make more commands work with repate
+Plugin 'tpope/vim-repeat'
+
+" handle word variants
+Plugin 'tpope/vim-abolish'
+
+" various mappings related to pairs
+Plugin 'tpope/vim-unimpaired.git'
+
+" enable editor config
+Plugin 'editorconfig/editorconfig-vim'
+
+" Add Cdo and Ldo (similar to argdo but for the quickfix list)
+Plugin 'Peeja/vim-cdo'
+
+" Toggle quickfix and localist
+Plugin 'milkypostman/vim-togglelist'
+
+" Vim sugar for unix shell commands that need it
+Plugin 'tpope/vim-eunuch.git'
+
+source ~/customVim/_buffers.vim
+source ~/customVim/_undo.vim
+source ~/customVim/powerbar.vim
+source ~/customVim/ultisnips.vim
+source ~/customVim/syntastic.vim
+source ~/customVim/google.vim
+
+" Put in closing brackets automatically
+Plugin 'Townk/vim-autoclose.git'
+
+"Adds nerd fonts"
+Plugin 'ryanoasis/nerd-fonts'
+
+set guifont=Droid\ Sans\ Mono\ for\ Powerline\ Plus\ Nerd\ File\ Types:h11
+
+" MAPPINGS
+
+" better <ESC> (to go back to normal mode from insert mode)
+inoremap jk <ESC>
+inoremap <ESC> <nop>
+
+" switch semi-colon and colon
+nnoremap ; :
+vnoremap ; :
+nnoremap : ;
+vnoremap : ;
+
+" insert the very magic reg-ex mode every time
+set hlsearch incsearch
+nnoremap / /\v
+nnoremap ? ?\v
+nnoremap <silent> <leader>/ :noh<CR>
+
+" disable Ex mode
+nnoremap Q <nop>
+vnoremap Q <nop>
+
+" set paste toggle
+set pastetoggle=<F1>
+
+" set make program shortcut
+nnoremap <leader>5 :call Make()<CR>
+vnoremap <leader>5 :call Make()<CR>
+
+let g:quickfix_open=0
+function! Make()
+    make
+    if !g:quickfix_open
+        if (len(getqflist()) > 1)
+            copen
+            let g:quickfix_open=1
+        end
+    end
+endfunction
+
+" toggle fugivite status
+let g:gstatus_open=0
+function! GStatusToggle()
+    if g:gstatus_open
+        try
+            bdelete index
+            let g:gstatus_open=0
+        catch
+            Gstatus
+            let g:gstatus_open=1
+        endtry
+    else
+        Gstatus
+        let g:gstatus_open=1
+    end
+endfunction
+nnoremap <silent> <leader>6 :call GStatusToggle()<CR>
+
+nnoremap <A-]> :cnext<CR>
+nnoremap <A-[> :cprev<CR>
+
+set clipboard=unnamed
+
+" jumping to definitions
+
+" goto definition
+nnoremap gd <C-]>zz
+
+" go back
+nnoremap gb <C-t>
+
+" see uses
+nnoremap gu vawy:tselect <C-r>0<CR>
+
+
+source ~/customVim/highlightWhitespace.vim
+source ~/customVim/spellChecker.vim
+
+" EDIT CUSTOMIZATION
+" Start editing the vimrc in a new buffer
+nnoremap <leader>v :call Edit_vimrc()<CR>
+function! Edit_vimrc()
+    exe 'edit ' . g:DV . '/vimrc'
+endfunction
+
+
+" See what syntax groups are under the cursor
+nnoremap <leader>O :call <SID>SynStack()<CR>
+function! <SID>SynStack()
+    if !exists("*synstack")
+        return
+    endif
+    echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
+endfunction
+
+if !exists("autocommands_loaded")
+    let autocommands_loaded=1
+
+    " Rerun vimrc upon editing
+    autocmd bufwritepost vimrc source %
+
+    " update the colorscheme upon saving
+    autocmd bufwritepost srcery.vim :colorscheme srcery
+endif
+
+" NETWORK
+" Disable matching parenthesise when on a network file
+autocmd BufReadPre //* :NoMatchParen
+
+" General web stuff
+au FileType htmldjango set ft=htmldjango.html
+au BufRead,BufNewFile Vagrantfile set ft=ruby
+au BufRead,BufNewFile *.coffee set ft=coffee
+au BufRead,BufNewFile *.snippets set ft=snippets
+
+" Crontab
+autocmd filetype crontab setlocal nobackup nowritebackup
+
+" OS DEPENDENT STUFF
+if has('win32') || has('win64')
+    set guifont=Consolas:h10
+elseif has('mac')
+    let macvim_skip_cmd_opt_movement = 1
+    let macvim_skip_colorscheme = 1
+    let macvim_hig_shift_movement = 1
+    if exists("&macmeta")
+        set macmeta
+    endif
+    set noantialias
+    set guifont=Monaco:h10
+else
+    set guifont=CodingFontTobi\ 12
+endif
+
+syntax enable
+call vundle#end()
+filetype plugin indent on
+syntax on
+
+source ~/customVim/_themes.vim
+
+" Send to tmux
+function! Get_visual_selection()
+    let [lnum1, col1] = getpos("'<")[1:2]
+    let [lnum2, col2] = getpos("'>")[1:2]
+    let lines = getline(lnum1, lnum2)
+    let lines[-1] = lines[-1][: col2 - (&selection == 'inclusive' ? 1 : 2)]
+    let lines[0] = lines[0][col1 - 1:]
+    return lines
+endfunction
+
+function! Send_select_to_last_pane()
+    let non_empty_lines = filter(Get_visual_selection(), 'v:val !~ "^\\s*$"')
+    let concatenated_lines = join(non_empty_lines, "")
+    call system('tmux send-keys -t :.-1 -l ' . shellescape(concatenated_lines) . '')
+endfunction
+
+vnoremap <c-g> <ESC>:call Send_select_to_last_pane()<CR>
+nnoremap <c-g> vaw<ESC>:call Send_select_to_last_pane()<CR>
+
+autocmd QuickFixCmdPost [^l]* nested cwindow
+autocmd QuickFixCmdPost    l* nested lwindow
+
+source ~/customVim/resize-panes.vim
+
+" CDC = Change to Directory of Current file
+command! CDC cd %:p:h
