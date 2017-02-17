@@ -4,7 +4,8 @@
 # But not these files...
 !.gitignore
 !customVim/**/*
-!customVim/
+!srcery.vim
+!colors/
 !.customVimrc
 !.tmux.conf
 !install-env.sh
