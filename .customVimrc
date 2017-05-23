@@ -4,6 +4,7 @@ source ~/customVim/git.vim
 source ~/customVim/html.vim
 source ~/customVim/javascript.vim
 source ~/customVim/json.vim
+source ~/customVim/hardmode.vim
 source ~/customVim/python.vim
 source ~/customVim/typescript.vim
 source ~/customVim/scss.vim
@@ -57,9 +58,6 @@ Plugin 'Peeja/vim-cdo'
 " Toggle quickfix and localist
 Plugin 'milkypostman/vim-togglelist'
 
-" Vim sugar for unix shell commands that need it
-Plugin 'tpope/vim-eunuch.git'
-
 source ~/customVim/_buffers.vim
 source ~/customVim/_undo.vim
 source ~/customVim/powerbar.vim
@@ -70,8 +68,15 @@ source ~/customVim/google.vim
 " Put in closing brackets automatically
 Plugin 'Townk/vim-autoclose.git'
 
-"Adds nerd fonts"
-Plugin 'ryanoasis/nerd-fonts'
+" Autoformat
+Plugin 'Chiel92/vim-autoformat'
+let g:formatdef_my_custom_html = '"html-beautify --wrap-attributes=force-aligned --indent-size=2"'
+let g:formatters_html = ['my_custom_html']
+au BufWrite *.ts,*.py,*.js,*.html,*.css,*.scss :Autoformat
+
+"Plugin 'maksimr/vim-jsbeautify'
+"let g:config_Beautifier = {"wrap-attributes": "force-aligned"}
+"au BufWrite *.html :call HtmlBeautify()
 
 set guifont=Droid\ Sans\ Mono\ for\ Powerline\ Plus\ Nerd\ File\ Types:h11
 
