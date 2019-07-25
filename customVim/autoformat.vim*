@@ -1,0 +1,6 @@
+" Autoformat
+Plugin 'Chiel92/vim-autoformat'
+let g:formatdef_my_custom_html = '"html-beautify --wrap-attributes=force-aligned --indent-size=2"'
+let g:formatters_html = ['my_custom_html']
+let g:formatters_python = []
+au BufWrite *.ts,*.js,*.html,*.css,*.scss :Autoformat
