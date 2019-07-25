@@ -6,3 +6,4 @@ nnoremap <silent> <leader>s :set spell!<CR>
 nnoremap <silent> <leader>S 1z=]s
 set spelllang=en_us " Set region to US English
 let &spellfile=g:DV."/spell/en.latin1.add"
+

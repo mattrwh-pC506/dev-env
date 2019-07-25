@@ -1,23 +1,28 @@
 source ~/customVim/init.vim
 source ~/customVim/vundle.vim
 source ~/customVim/git.vim
+source ~/customVim/autoformat.vim
 source ~/customVim/html.vim
 source ~/customVim/javascript.vim
 source ~/customVim/json.vim
-source ~/customVim/hardmode.vim
+"source ~/customVim/hardmode.vim
 source ~/customVim/python.vim
 source ~/customVim/typescript.vim
 source ~/customVim/scss.vim
 source ~/customVim/search.vim
 source ~/customVim/sort.vim
+source ~/customVim/swift.vim
 source ~/customVim/tagbar.vim
 source ~/customVim/tmux.vim
+source ~/customVim/vue.vim
+source ~/customVim/fzf.vim
+source ~/customVim/comments.vim
+
+set number
+
 
 " Add Under-Cusor Highlighting
 :autocmd CursorMoved * exe printf('match IncSearch /\V\<%s\>/', escape(expand('<cword>'), '/\'))
-
-" Commenting tools
-Plugin 'scrooloose/nerdcommenter.git'
 
 " Lets you deal with braket pairs etc.
 Plugin 'tpope/vim-surround.git'
@@ -37,9 +42,6 @@ Plugin 'moll/vim-node'
 " scss syntax highlighting
 Plugin 'cakebaker/scss-syntax.vim'
 
-" extended matching with %
-Plugin 'edsono/vim-matchit.git'
-
 " make more commands work with repate
 Plugin 'tpope/vim-repeat'
 
@@ -51,6 +53,9 @@ Plugin 'tpope/vim-unimpaired.git'
 
 " enable editor config
 Plugin 'editorconfig/editorconfig-vim'
+let g:EditorConfig_exec_path = '~/.editorconfig'
+set tabstop=2 
+set softtabstop=2 
 
 " Add Cdo and Ldo (similar to argdo but for the quickfix list)
 Plugin 'Peeja/vim-cdo'
@@ -58,25 +63,17 @@ Plugin 'Peeja/vim-cdo'
 " Toggle quickfix and localist
 Plugin 'milkypostman/vim-togglelist'
 
+" Srcery Color Theme
+Plugin 'roosta/vim-srcery'
+
 source ~/customVim/_buffers.vim
 source ~/customVim/_undo.vim
 source ~/customVim/powerbar.vim
-source ~/customVim/ultisnips.vim
 source ~/customVim/syntastic.vim
 source ~/customVim/google.vim
 
 " Put in closing brackets automatically
 Plugin 'Townk/vim-autoclose.git'
-
-" Autoformat
-Plugin 'Chiel92/vim-autoformat'
-let g:formatdef_my_custom_html = '"html-beautify --wrap-attributes=force-aligned --indent-size=2"'
-let g:formatters_html = ['my_custom_html']
-au BufWrite *.ts,*.py,*.js,*.html,*.css,*.scss :Autoformat
-
-"Plugin 'maksimr/vim-jsbeautify'
-"let g:config_Beautifier = {"wrap-attributes": "force-aligned"}
-"au BufWrite *.html :call HtmlBeautify()
 
 set guifont=Droid\ Sans\ Mono\ for\ Powerline\ Plus\ Nerd\ File\ Types:h11
 
@@ -84,7 +81,7 @@ set guifont=Droid\ Sans\ Mono\ for\ Powerline\ Plus\ Nerd\ File\ Types:h11
 
 " better <ESC> (to go back to normal mode from insert mode)
 inoremap jk <ESC>
-inoremap <ESC> <nop>
+inoremap <ESC> <ESC>
 
 " switch semi-colon and colon
 nnoremap ; :
@@ -216,7 +213,9 @@ endif
 
 syntax enable
 call vundle#end()
+filetype plugin on
 filetype plugin indent on
+autocmd FileType typescript.jsx setlocal noexpandtab shiftwidth=2 softtabstop=2 tabstop=2
 syntax on
 
 source ~/customVim/_themes.vim
@@ -247,3 +246,11 @@ source ~/customVim/resize-panes.vim
 
 " CDC = Change to Directory of Current file
 command! CDC cd %:p:h
+
+let g:netrw_bufsettings = "noma nomod nu nobl nowrap"
+
+function! FindAllFiles()
+    :r! find . -type f
+endfunction
+
+:set nofixendofline
